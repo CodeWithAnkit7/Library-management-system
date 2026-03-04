@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Library Management System</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="app-header">
+    <h1>📚 Library Management System</h1>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="books" role="tab">Books</button>
+      <button class="tab" data-tab="users" role="tab">Users</button>
+      <button class="tab" data-tab="transactions" role="tab">Transactions</button>
+      <button class="tab" data-tab="dashboard" role="tab">Dashboard</button>
+    </nav>
+  </header>
+
+  <main class="container">
+    <!-- BOOKS PANEL -->
+    <section id="panel-books" class="panel active" aria-labelledby="Books">
+      <div class="panel-header">
+        <h2>Books</h2>
+        <div class="actions">
+          <input type="text" id="searchBooks" placeholder="Search by title, author, year" />
+        </div>
+      </div>
+
+      <div class="grid two">
+        <form id="bookForm" class="card" autocomplete="off">
+          <h3 id="bookFormTitle">Add New Book</h3>
+          <div class="form-row">
+            <label>Title</label>
+            <input type="text" id="bookTitle" required />
+          </div>
+          <div class="form-row">
+            <label>Author</label>
+            <input type="text" id="bookAuthor" required />
+          </div>
+          <div class="form-row">
+            <label>Year</label>
+            <input type="number" id="bookYear" min="0" required />
+          </div>
+          <div class="form-row">
+            <label>Category</label>
+            <input type="text" id="bookCategory" placeholder="e.g., Fiction, CS, History" />
+          </div>
+          <div class="form-row">
+            <label>Total Copies</label>
+            <input type="number" id="bookCopies" min="1" value="1" required />
+          </div>
+          <div class="form-row inline">
+            <button type="submit" class="btn primary" id="bookSaveBtn">Save Book</button>
+            <button type="button" class="btn" id="bookCancelEdit" hidden>Cancel</button>
+          </div>
+        </form>
+
+        <div class="card table-wrap">
+          <div class="table-scroll">
+            <table id="booksTable">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Author</th>
+                  <th>Year</th>
+                  <th>Category</th>
+                  <th>Available/Total</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- USERS PANEL -->
+    <section id="panel-users" class="panel" aria-labelledby="Users">
+      <div class="panel-header">
+        <h2>Users / Members</h2>
+        <div class="actions">
+          <input type="text" id="searchUsers" placeholder="Search by name, email, reg no" />
+        </div>
+      </div>
+
+      <div class="grid two">
+        <form id="userForm" class="card" autocomplete="off">
+          <h3 id="userFormTitle">Add New User</h3>
+          <div class="form-row">
+            <label>Name</label>
+            <input type="text" id="userName" required />
+          </div>
+          <div class="form-row">
+            <label>Email</label>
+            <input type="email" id="userEmail" required />
+          </div>
+          <div class="form-row">
+            <label>Reg No / ID</label>
+            <input type="text" id="userReg" required />
+          </div>
+          <div class="form-row inline">
+            <button type="submit" class="btn primary" id="userSaveBtn">Save User</button>
+            <button type="button" class="btn" id="userCancelEdit" hidden>Cancel</button>
+          </div>
+        </form>
+
+        <div class="card table-wrap">
+          <div class="table-scroll">
+            <table id="usersTable">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Reg No</th>
+                  <th>Borrowed</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRANSACTIONS PANEL -->
+    <section id="panel-transactions" class="panel" aria-labelledby="Transactions">
+      <div class="panel-header">
+        <h2>Transactions</h2>
+        <div class="actions">
+          <select id="filterTxStatus">
+            <option value="all">All</option>
+            <option value="active">Active</option>
+            <option value="returned">Returned</option>
+            <option value="overdue">Overdue</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="card table-wrap">
+        <div class="table-scroll">
+          <table id="txTable">
+            <thead>
+              <tr>
+                <th>Book</th>
+                <th>User</th>
+                <th>Issued On</th>
+                <th>Due On</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- DASHBOARD PANEL -->
+    <section id="panel-dashboard" class="panel" aria-labelledby="Dashboard">
+      <div class="panel-header">
+        <h2>Dashboard</h2>
+      </div>
+      <div class="grid three">
+        <div class="card stat">
+          <div class="stat-label">Total Books</div>
+          <div class="stat-value" id="statTotalBooks">0</div>
+        </div>
+        <div class="card stat">
+          <div class="stat-label">Copies Available</div>
+          <div class="stat-value" id="statCopiesAvail">0</div>
+        </div>
+        <div class="card stat">
+          <div class="stat-label">Active Loans</div>
+          <div class="stat-value" id="statActiveLoans">0</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ISSUE MODAL -->
+  <div id="issueModal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Issue Book</h3>
+        <button class="btn icon" id="closeIssueModal" aria-label="Close">✕</button>
+      </div>
+      <form id="issueForm">
+        <input type="hidden" id="issueBookId" />
+        <div class="form-row">
+          <label>User</label>
+          <select id="issueUser" required></select>
+        </div>
+        <div class="form-row">
+          <label>Due Date</label>
+          <input type="date" id="issueDue" required />
+        </div>
+        <div class="form-row inline">
+          <button type="submit" class="btn primary">Confirm Issue</button>
+          <button type="button" class="btn" id="cancelIssue">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <p>&copy; 2025 Library Management | HTML • CSS • JavaScript</p>
+  </footer>
+
+  <template id="emptyRow">
+    <tr><td colspan="6" class="muted">No records</td></tr>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
